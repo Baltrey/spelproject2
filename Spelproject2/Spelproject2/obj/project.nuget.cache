@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "9GrWKOcN31bSZNowkjSWU4RQSSmFDU84OhdrqySvIVsrJbBgXeiWW86UGjnAeQL2YQ9C/joOiM0PloGIJvCHkg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\baltazar.biverstal\\Documents\\Programering1\\spelproject2\\Spelproject2\\Spelproject2\\Spelproject2.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\baltazar.biverstal\\.nuget\\packages\\raylib-cs\\4.2.0.2\\raylib-cs.4.2.0.2.nupkg.sha512",
+    "C:\\Users\\baltazar.biverstal\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
