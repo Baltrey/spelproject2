@@ -1,4 +1,6 @@
 ﻿using Raylib_cs;
+using System.Numerics;
+Random generator = new Random();
 Raylib.InitWindow(845, 600, "spel");
 Raylib.SetTargetFPS(60);
 
@@ -6,25 +8,73 @@ float speed = 6f;
 float enemieX = 0;
 float enemieY = 0;
 
-List<Rectangle> grid = start();
+List<Block> grid = start();
+
+Ball ball = new();
 
 
 Rectangle playerRect = new Rectangle(300, 500, 175, 50);
+// InitGame();
 while (!Raylib.WindowShouldClose())
 {
+    // if (IsKeyPressed(KeyboardKey.KEY_P))
+    // {
+    //     if (!ball.active) ball.active = true;
+    //     else ball.active = false;
+    // }
     move();
+
+    foreach (Block b in grid)
+    {
+        if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, b.rect) && (b.active = true))
+        {
+            b.active = false;
+            ball.speed.X *= -1.0f;
+
+        }
+    }
+
 
     Raylib.BeginDrawing();
 
     Raylib.ClearBackground(Color.DARKGRAY);
 
-    foreach (Rectangle r in grid)
+    foreach (var r in grid)
     {
-        Raylib.DrawRectangleRec(r, color[y]);
+        Raylib.DrawRectangleRec(r.rect, r.color);
     }
 
 
+
+
     Raylib.DrawRectangle((int)playerRect.x, 500, 175, 50, Color.DARKPURPLE);
+    // if (ball.active)
+    // {
+    //     // Bouncing ball logic
+    //     ball.position.X += ball.speed.X;
+    //     ball.position.Y += ball.speed.Y;
+
+    //     if ((ball.position.Y >= (GetScreenHeight() - ball.radius)) || (ball.position.Y <= ball.radius)) ball.speed.Y *= -1.0f;
+    //     if (CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.X *= -1.0f;
+    //     if (CheckCollisionCircleRec(ball.position, ball.radius, player2.body)) ball.speed.X *= -1.0f;
+
+    //     //Score
+    //     if ((ball.position.X >= (GetScreenWidth() - ball.radius)))
+    //     {
+    //         player1.score += 1;
+    //         ball.position.Y = GetScreenHeight() / 2;
+    //         ball.position.X = GetScreenWidth() / 2;
+    //         ball.active = false;
+    //     }
+    //     if (ball.position.X <= ball.radius)
+    //     {
+    //         player2.score += 1;
+    //         ball.position.Y = GetScreenHeight() / 2;
+    //         ball.position.X = GetScreenWidth() / 2;
+    //         ball.active = false;
+    //     }
+
+    // }
 
     Raylib.EndDrawing();
 
@@ -37,27 +87,57 @@ void move()
     {
         playerRect.x -= speed;
     }
-    if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) && playerRect.x < 625)
+    if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) && playerRect.x < 675)
     {
         playerRect.x += speed;
     }
 }
 
 
-static List<Rectangle> start()
+static List<Block> start()
 {
-    List<Rectangle> grid = new();
+    List<Block> grid = new();
 
     int width = 100;
     int height = 50;
-    Color[] colors = {Color.BLUE, Color.BLACK, Color.GREEN, Color.RED,Color.GOLD, Color.PURPLE, Color.MAGENTA, Color.ORANGE};
+    // int i = generator.Next(0, 9);
+
+
+    Color[] colors = { Color.BLUE, Color.BLACK, Color.GREEN, Color.RED, Color.GOLD, Color.PURPLE, Color.MAGENTA, Color.ORANGE, Color.BEIGE };
+
 
     for (int y = 0; y < 6; y++)
     {
-        for (int x = 0; x < 8; x++)
+        for (int x = 0; x < 9; x++)
         {
-            grid.Add(new Rectangle((y % 2 * 35) + 5 + (width + 5) * x, 5 + (height + 5) * y, width, height));
+            Block b = new();
+            b.rect = new Rectangle((y % 2 * 50) - 100 + (width + 5) * x, 5 + (height + 5) * y, width, height);
+            b.color = colors[x];
+            grid.Add(b);
         }
     }
     return grid;
+}
+// static void InitGame()
+// {
+
+//     ball.position.Y = 450;
+//     ball.position.X = 350;
+//     ball.radius = 10;
+//     ball.speed = new Vector2(18f, 13f);
+//     ball.active = false;
+// }
+public class Ball
+{
+    public Vector2 position;
+    public Vector2 speed;
+    public float radius;
+    public bool active;
+}
+
+public class Block
+{
+    public Rectangle rect;
+    public Color color;
+    public bool active;
 }
