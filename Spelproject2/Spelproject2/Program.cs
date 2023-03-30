@@ -5,23 +5,20 @@ Raylib.InitWindow(845, 600, "spel");
 Raylib.SetTargetFPS(60);
 
 float speed = 6f;
-float enemieX = 0;
-float enemieY = 0;
+string currentscene = "start";
 
 List<Block> grid = start();
-
 Ball ball = new();
 
-
 Rectangle playerRect = new Rectangle(300, 500, 175, 50);
-// InitGame();
+InitGame();
 while (!Raylib.WindowShouldClose())
 {
-    // if (IsKeyPressed(KeyboardKey.KEY_P))
-    // {
-    //     if (!ball.active) ball.active = true;
-    //     else ball.active = false;
-    // }
+    if (Raylib.IsKeyPressed(KeyboardKey.KEY_P))
+    {
+        if (!ball.active) ball.active = true;
+        else ball.active = false;
+    }
     move();
 
     foreach (Block b in grid)
@@ -29,7 +26,7 @@ while (!Raylib.WindowShouldClose())
         if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, b.rect) && (b.active = true))
         {
             b.active = false;
-            ball.speed.X *= -1.0f;
+            ball.speed.Y *= -1.0f;
 
         }
     }
@@ -41,41 +38,32 @@ while (!Raylib.WindowShouldClose())
 
     foreach (var r in grid)
     {
-        Raylib.DrawRectangleRec(r.rect, r.color);
+        if (ball.active != false) Raylib.DrawRectangleRec(r.rect, r.color);
     }
 
 
 
 
     Raylib.DrawRectangle((int)playerRect.x, 500, 175, 50, Color.DARKPURPLE);
-    // if (ball.active)
-    // {
-    //     // Bouncing ball logic
-    //     ball.position.X += ball.speed.X;
-    //     ball.position.Y += ball.speed.Y;
+    if (ball.active)
+    {
+        // Bouncing ball logic
+        ball.position.X += ball.speed.X;
+        ball.position.Y += ball.speed.Y;
 
-    //     if ((ball.position.Y >= (GetScreenHeight() - ball.radius)) || (ball.position.Y <= ball.radius)) ball.speed.Y *= -1.0f;
-    //     if (CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.X *= -1.0f;
-    //     if (CheckCollisionCircleRec(ball.position, ball.radius, player2.body)) ball.speed.X *= -1.0f;
+        if ((ball.position.Y >= (600 - ball.radius))) ball.speed.Y *= -1.0f;
+        if ((ball.position.X >= (845 - ball.radius)) || (ball.position.X <= ball.radius)) ball.speed.X *= -1.0f;
+        if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
 
-    //     //Score
-    //     if ((ball.position.X >= (GetScreenWidth() - ball.radius)))
-    //     {
-    //         player1.score += 1;
-    //         ball.position.Y = GetScreenHeight() / 2;
-    //         ball.position.X = GetScreenWidth() / 2;
-    //         ball.active = false;
-    //     }
-    //     if (ball.position.X <= ball.radius)
-    //     {
-    //         player2.score += 1;
-    //         ball.position.Y = GetScreenHeight() / 2;
-    //         ball.position.X = GetScreenWidth() / 2;
-    //         ball.active = false;
-    //     }
+        //Score
+        if (ball.position.Y <= ball.radius)
+        {
+            currentscene = "end";
+            ball.active = false;
+        }
 
-    // }
-
+    }
+    Raylib.DrawCircle((int)ball.position.X, (int)ball.position.Y, ball.radius, Color.ORANGE);
     Raylib.EndDrawing();
 
 }
@@ -118,15 +106,15 @@ static List<Block> start()
     }
     return grid;
 }
-// static void InitGame()
-// {
+void InitGame()
+{
 
-//     ball.position.Y = 450;
-//     ball.position.X = 350;
-//     ball.radius = 10;
-//     ball.speed = new Vector2(18f, 13f);
-//     ball.active = false;
-// }
+    ball.position.Y = (playerRect.y - (ball.radius * 2));
+    ball.position.X = (playerRect.x + ball.radius);
+    ball.radius = 25;
+    ball.speed = new Vector2(5f, 5f);
+    ball.active = false;
+}
 public class Ball
 {
     public Vector2 position;
