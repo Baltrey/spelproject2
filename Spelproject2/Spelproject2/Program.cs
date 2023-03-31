@@ -1,73 +1,131 @@
 ﻿using Raylib_cs;
 using System.Numerics;
-Random generator = new Random();
-Raylib.InitWindow(845, 600, "spel");
+
+float screenheight = 800;
+float screenwidth = 845;
+
+Raylib.InitWindow((int)screenwidth, (int)screenheight, "spel");
 Raylib.SetTargetFPS(60);
 
-float speed = 6f;
-string currentscene = "start";
+float speed;
+string currentscene = "game";
 
 List<Block> grid = start();
 Ball ball = new();
 
-Rectangle playerRect = new Rectangle(300, 500, 175, 50);
+Rectangle playerRect = new Rectangle(((int)screenwidth / 2), (((int)screenheight / 10) * 8), 175, 50);
 InitGame();
+
 while (!Raylib.WindowShouldClose())
 {
-    if (Raylib.IsKeyPressed(KeyboardKey.KEY_P))
+    if (currentscene == "game")
     {
-        if (!ball.active) ball.active = true;
-        else ball.active = false;
-    }
-    move();
 
-    foreach (Block b in grid)
-    {
-        if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, b.rect) && (b.active = true))
+        if (checkPlayerWin())
         {
-            b.active = false;
-            ball.speed.Y *= -1.0f;
+            // Vunnit ... 
+            currentscene = "win";
+            InitGame();
+        }
 
+        //startar bollen när man trycker space
+        if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE))
+        {
+            if (!ball.active)
+            {
+                ball.active = true;
+            }
+        }
+        //gör så att bollen följer efter blocket innan man startar den
+        if (!ball.active)
+        {
+            ball.position.Y = (playerRect.y - ball.radius);
+            ball.position.X = (playerRect.x + 88);
+        }
+        move();
+        //kollar om du har träffat en kub
+        foreach (Block b in grid)
+        {
+            if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, b.rect) && (b.active != false))
+            {
+                b.active = false;
+                ball.speed.Y *= -1.0f;
+
+            }
+        }
+
+
+    }
+    if (currentscene == "win" || currentscene == "end")
+    {
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_ENTER))
+        {
+            currentscene = "game";
         }
     }
-
-
     Raylib.BeginDrawing();
-
+    //ritar ut all grafik för spel skärmen
     Raylib.ClearBackground(Color.DARKGRAY);
-
-    foreach (var r in grid)
+    if (currentscene == "game")
     {
-        if (ball.active != false) Raylib.DrawRectangleRec(r.rect, r.color);
-    }
-
-
-
-
-    Raylib.DrawRectangle((int)playerRect.x, 500, 175, 50, Color.DARKPURPLE);
-    if (ball.active)
-    {
-        // Bouncing ball logic
-        ball.position.X += ball.speed.X;
-        ball.position.Y += ball.speed.Y;
-
-        if ((ball.position.Y >= (600 - ball.radius))) ball.speed.Y *= -1.0f;
-        if ((ball.position.X >= (845 - ball.radius)) || (ball.position.X <= ball.radius)) ball.speed.X *= -1.0f;
-        if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
-
-        //Score
-        if (ball.position.Y <= ball.radius)
+        foreach (var b in grid)
         {
-            currentscene = "end";
-            ball.active = false;
+            if (b.active != false)
+            {
+                Raylib.DrawRectangleRec(b.rect, b.color);
+            }
         }
 
+
+
+
+        Raylib.DrawRectangle((int)playerRect.x, (((int)screenheight / 10) * 8), 175, 50, Color.DARKPURPLE);
+        if (ball.active)
+        {
+            // Bouncing ball logic
+            ball.position.X += ball.speed.X;
+            ball.position.Y += ball.speed.Y;
+
+            if ((ball.position.Y <= (0 + ball.radius))) ball.speed.Y *= -1.0f;
+            if ((ball.position.X >= (screenwidth - ball.radius)) || (ball.position.X <= ball.radius)) ball.speed.X *= -1.0f;
+            if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
+
+            //Score
+            if (ball.position.Y >= (screenheight - ball.radius))
+            {
+                currentscene = "end";
+                ball.active = false;
+                InitGame();
+            }
+
+        }
+        Raylib.DrawCircle((int)ball.position.X, (int)ball.position.Y, ball.radius, Color.ORANGE);
     }
-    Raylib.DrawCircle((int)ball.position.X, (int)ball.position.Y, ball.radius, Color.ORANGE);
+    if (currentscene == "win")
+    {
+        Raylib.DrawText("Du vann grattis!!", (((int)screenwidth / 4) + 50), ((int)screenheight / 2), 25, Color.BLACK);
+        Raylib.DrawText("tryck enter för att göra igen", ((int)screenwidth / 4), (((int)screenheight / 2) + 25), 25, Color.BLACK);
+    }
+    if (currentscene == "end")
+    {
+        Raylib.DrawText("Du förlorade!!", (((int)screenwidth / 4) + 50), ((int)screenheight / 2), 25, Color.BLACK);
+        Raylib.DrawText("tryck enter för att göra igen", ((int)screenwidth / 4), (((int)screenheight / 2) + 25), 25, Color.BLACK);
+    }
     Raylib.EndDrawing();
 
 }
+bool checkPlayerWin()
+{
+    foreach (Block b in grid)
+    {
+        if (b.active)
+        {
+            return false;
+        }
+    }
 
+    return true;
+}
 
 void move()
 {
@@ -75,12 +133,19 @@ void move()
     {
         playerRect.x -= speed;
     }
-    if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) && playerRect.x < 675)
+    if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT) && playerRect.x < (screenwidth - 175))
     {
         playerRect.x += speed;
     }
+    if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT))
+    {
+        speed = 13;
+    }
+    else
+    {
+        speed = 8f;
+    }
 }
-
 
 static List<Block> start()
 {
@@ -88,19 +153,21 @@ static List<Block> start()
 
     int width = 100;
     int height = 50;
-    // int i = generator.Next(0, 9);
+    Random generator = new Random();
+    int randomColorIndex = generator.Next(0, 6);
 
 
-    Color[] colors = { Color.BLUE, Color.BLACK, Color.GREEN, Color.RED, Color.GOLD, Color.PURPLE, Color.MAGENTA, Color.ORANGE, Color.BEIGE };
+    Color[] colors = { Color.BLUE, Color.BLACK, Color.GREEN, Color.RED, Color.PURPLE, Color.ORANGE };
 
-
-    for (int y = 0; y < 6; y++)
+    for (int y = 0; y < 7; y++)
     {
+        randomColorIndex = generator.Next(0, 6);
         for (int x = 0; x < 9; x++)
         {
             Block b = new();
             b.rect = new Rectangle((y % 2 * 50) - 100 + (width + 5) * x, 5 + (height + 5) * y, width, height);
-            b.color = colors[x];
+            b.color = colors[randomColorIndex];
+            b.active = true;
             grid.Add(b);
         }
     }
@@ -109,11 +176,14 @@ static List<Block> start()
 void InitGame()
 {
 
-    ball.position.Y = (playerRect.y - (ball.radius * 2));
-    ball.position.X = (playerRect.x + ball.radius);
+    ball.position.Y = (playerRect.y - ball.radius);
+    ball.position.X = (playerRect.x + 88);
     ball.radius = 25;
-    ball.speed = new Vector2(5f, 5f);
+    ball.speed = new Vector2(9f, 7.5f);
     ball.active = false;
+    speed = 8f;
+    start();
+    playerRect.x = 300;
 }
 public class Ball
 {
@@ -129,3 +199,5 @@ public class Block
     public Color color;
     public bool active;
 }
+
+
