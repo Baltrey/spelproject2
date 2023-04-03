@@ -1,5 +1,6 @@
 ﻿using Raylib_cs;
 using System.Numerics;
+using System.Linq;
 
 float screenheight = 800;
 float screenwidth = 845;
@@ -88,8 +89,15 @@ while (!Raylib.WindowShouldClose())
 
             if ((ball.position.Y <= (0 + ball.radius))) ball.speed.Y *= -1.0f;
             if ((ball.position.X >= (screenwidth - ball.radius)) || (ball.position.X <= ball.radius)) ball.speed.X *= -1.0f;
-            if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
+            if ((ball.position.Y == playerRect.y) && (playerRect.x == ball.position.X))
+            {
+                ball.speed.X *= -1.0f;
+            }
+            else
+            {
+                if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
 
+            }
             //Score
             if (ball.position.Y >= (screenheight - ball.radius))
             {
@@ -157,32 +165,18 @@ static List<Block> start()
 
     int width = 100;
     int height = 50;
-    Random a = new Random();
-    int[] random = new int[7];
-    int randomColorIndex = 0;
-    int randomnumber = 0;
-    for (var i = 0; i < 7;)
-    {
-        randomnumber = a.Next(0, 10);
-        if (!random.Contains(randomnumber))
-        {
-            random[i] = randomnumber;
-            i++;
-        }
-    }
 
 
 
-    Color[] colors = { Color.BLUE, Color.GREEN, Color.RED, Color.PURPLE, Color.ORANGE };
+    Color[] colors = { Color.BLUE, Color.GREEN, Color.RED, Color.PURPLE, Color.ORANGE, Color.YELLOW, Color.SKYBLUE };
 
     for (int y = 0; y < 7; y++)
     {
-        randomColorIndex = random[y];
         for (int x = 0; x < 9; x++)
         {
             Block b = new();
             b.rect = new Rectangle((y % 2 * 50) - 100 + (width + 5) * x, 5 + (height + 5) * y, width, height);
-            b.color = colors[randomColorIndex];
+            b.color = colors[y];
             b.active = true;
             grid.Add(b);
         }
