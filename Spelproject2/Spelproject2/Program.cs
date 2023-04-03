@@ -122,6 +122,10 @@ bool checkPlayerWin()
         {
             return false;
         }
+        else
+        {
+            return true;
+        }
     }
 
     return true;
@@ -153,15 +157,27 @@ static List<Block> start()
 
     int width = 100;
     int height = 50;
-    Random generator = new Random();
-    int randomColorIndex = generator.Next(0, 6);
+    Random a = new Random();
+    int[] random = new int[7];
+    int randomColorIndex = 0;
+    int randomnumber = 0;
+    for (var i = 0; i < 7;)
+    {
+        randomnumber = a.Next(0, 10);
+        if (!random.Contains(randomnumber))
+        {
+            random[i] = randomnumber;
+            i++;
+        }
+    }
 
 
-    Color[] colors = { Color.BLUE, Color.BLACK, Color.GREEN, Color.RED, Color.PURPLE, Color.ORANGE };
+
+    Color[] colors = { Color.BLUE, Color.GREEN, Color.RED, Color.PURPLE, Color.ORANGE };
 
     for (int y = 0; y < 7; y++)
     {
-        randomColorIndex = generator.Next(0, 6);
+        randomColorIndex = random[y];
         for (int x = 0; x < 9; x++)
         {
             Block b = new();
@@ -182,8 +198,11 @@ void InitGame()
     ball.speed = new Vector2(9f, 7.5f);
     ball.active = false;
     speed = 8f;
-    start();
     playerRect.x = 300;
+    foreach (Block b in grid)
+    {
+        b.active = true;
+    }
 }
 public class Ball
 {
