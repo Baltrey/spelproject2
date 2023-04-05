@@ -15,6 +15,8 @@ List<Block> grid = start();
 Ball ball = new();
 
 Rectangle playerRect = new Rectangle(((int)screenwidth / 2), (((int)screenheight / 10) * 8), 175, 50);
+Rectangle sides = new Rectangle((playerRect.x - 5), (playerRect.y - 1), 5, 50);
+Rectangle sides2 = new Rectangle((playerRect.x + 175), (playerRect.y - 1), 5, 50);
 InitGame();
 
 while (!Raylib.WindowShouldClose())
@@ -40,7 +42,7 @@ while (!Raylib.WindowShouldClose())
         //gör så att bollen följer efter blocket innan man startar den
         if (!ball.active)
         {
-            ball.position.Y = (playerRect.y - ball.radius);
+            ball.position.Y = (playerRect.y - ball.radius - 5);
             ball.position.X = (playerRect.x + 88);
         }
         move();
@@ -89,13 +91,10 @@ while (!Raylib.WindowShouldClose())
 
             if ((ball.position.Y <= (0 + ball.radius))) ball.speed.Y *= -1.0f;
             if ((ball.position.X >= (screenwidth - ball.radius)) || (ball.position.X <= ball.radius)) ball.speed.X *= -1.0f;
-            if ((ball.position.Y == playerRect.y) && (playerRect.x == ball.position.X))
-            {
-                ball.speed.X *= -1.0f;
-            }
+            if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
             else
             {
-                if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
+                if ((Raylib.CheckCollisionCircleRec(ball.position, ball.radius, sides)) || (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, sides2))) ball.speed.X *= -1.0f;
 
             }
             //Score
@@ -129,10 +128,6 @@ bool checkPlayerWin()
         if (b.active)
         {
             return false;
-        }
-        else
-        {
-            return true;
         }
     }
 
@@ -189,7 +184,7 @@ void InitGame()
     ball.position.Y = (playerRect.y - ball.radius);
     ball.position.X = (playerRect.x + 88);
     ball.radius = 25;
-    ball.speed = new Vector2(9f, 7.5f);
+    ball.speed = new Vector2(9f, -7.5f);
     ball.active = false;
     speed = 8f;
     playerRect.x = 300;
