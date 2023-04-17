@@ -14,9 +14,7 @@ string currentscene = "game";
 List<Block> grid = start();
 Ball ball = new();
 
-Rectangle playerRect = new Rectangle(((int)screenwidth / 2), (((int)screenheight / 10) * 8), 175, 50);
-Rectangle sides = new Rectangle((playerRect.x - 5), (playerRect.y - 1), 5, 50);
-Rectangle sides2 = new Rectangle((playerRect.x + 175), (playerRect.y - 1), 5, 50);
+Rectangle playerRect = new Rectangle(((int)screenwidth / 2), (((int)screenheight / 10) * 8), 175, 1);
 InitGame();
 
 while (!Raylib.WindowShouldClose())
@@ -91,11 +89,19 @@ while (!Raylib.WindowShouldClose())
 
             if ((ball.position.Y <= (0 + ball.radius))) ball.speed.Y *= -1.0f;
             if ((ball.position.X >= (screenwidth - ball.radius)) || (ball.position.X <= ball.radius)) ball.speed.X *= -1.0f;
-            if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
-            else
+            // if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
+            if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect))
             {
-                if ((Raylib.CheckCollisionCircleRec(ball.position, ball.radius, sides)) || (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, sides2))) ball.speed.X *= -1.0f;
 
+
+                if (ball.position.Y > (playerRect.y))
+                {
+                    ball.speed.X *= -1.0f;
+                }
+                else
+                {
+                    ball.speed.Y *= -1.0f;
+                }
             }
             //Score
             if (ball.position.Y >= (screenheight - ball.radius))
@@ -167,10 +173,10 @@ static List<Block> start()
 
     for (int y = 0; y < 7; y++)
     {
-        for (int x = 0; x < 9; x++)
+        for (int x = 0; x < 8 + (y % 2 * 1); x++)
         {
             Block b = new();
-            b.rect = new Rectangle((y % 2 * 50) - 100 + (width + 5) * x, 5 + (height + 5) * y, width, height);
+            b.rect = new Rectangle((y % 2 * -50) + 5 + (width + 5) * x, 5 + (height + 5) * y, width, height);
             b.color = colors[y];
             b.active = true;
             grid.Add(b);
@@ -208,4 +214,4 @@ public class Block
     public bool active;
 }
 
-
+// Nico was here
