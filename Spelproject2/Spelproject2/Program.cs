@@ -189,7 +189,7 @@ void InitGame()
 
     ball.position.Y = (playerRect.y - ball.radius);
     ball.position.X = (playerRect.x + 88);
-    ball.radius = 25;
+    ball.radius = 20;
     ball.speed = new Vector2(9f, -7.5f);
     ball.active = false;
     speed = 8f;
