@@ -133,11 +133,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\baltazar.biverstal\\Documents\\Programering1\\spelproject2\\Spelproject2\\Spelproject2\\Spelproject2.csproj",
+      "projectUniqueName": "C:\\Users\\baltazar.biverstal\\Documents\\Programering1\\spelproject2\\Spelproject2\\Spelproject2\\Spelproject2.csproj",
       "projectName": "Spelproject2",
-      "projectPath": "c:\\Users\\baltazar.biverstal\\Documents\\Programering1\\spelproject2\\Spelproject2\\Spelproject2\\Spelproject2.csproj",
+      "projectPath": "C:\\Users\\baltazar.biverstal\\Documents\\Programering1\\spelproject2\\Spelproject2\\Spelproject2\\Spelproject2.csproj",
       "packagesPath": "C:\\Users\\baltazar.biverstal\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\baltazar.biverstal\\Documents\\Programering1\\spelproject2\\Spelproject2\\Spelproject2\\obj\\",
+      "outputPath": "C:\\Users\\baltazar.biverstal\\Documents\\Programering1\\spelproject2\\Spelproject2\\Spelproject2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\baltazar.biverstal\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -185,7 +185,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.406\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.408\\RuntimeIdentifierGraph.json"
       }
     }
   }
