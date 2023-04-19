@@ -16,7 +16,7 @@ Ball ball = new();
 
 Rectangle playerRect = new Rectangle(((int)screenwidth / 2), (((int)screenheight / 10) * 8), 175, 1);
 InitGame();
-
+//loop som är igång medans spelet är det
 while (!Raylib.WindowShouldClose())
 {
     if (currentscene == "game")
@@ -57,6 +57,7 @@ while (!Raylib.WindowShouldClose())
 
 
     }
+    //gör så att man behöver trycka enter på slut skärmen
     if (currentscene == "win" || currentscene == "end")
     {
         if (Raylib.IsKeyDown(KeyboardKey.KEY_ENTER))
@@ -89,7 +90,6 @@ while (!Raylib.WindowShouldClose())
 
             if ((ball.position.Y <= (0 + ball.radius))) ball.speed.Y *= -1.0f;
             if ((ball.position.X >= (screenwidth - ball.radius)) || (ball.position.X <= ball.radius)) ball.speed.X *= -1.0f;
-            // if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect)) ball.speed.Y *= -1.0f;
             if (Raylib.CheckCollisionCircleRec(ball.position, ball.radius, playerRect))
             {
 
@@ -127,6 +127,7 @@ while (!Raylib.WindowShouldClose())
     Raylib.EndDrawing();
 
 }
+//kollar om man har vunnit
 bool checkPlayerWin()
 {
     foreach (Block b in grid)
@@ -139,7 +140,7 @@ bool checkPlayerWin()
 
     return true;
 }
-
+//functionen för att spelaren ska kunna röra på sig
 void move()
 {
     if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT) && playerRect.x > 3)
@@ -159,7 +160,7 @@ void move()
         speed = 8f;
     }
 }
-
+//skapar en 2d array med block i
 static List<Block> start()
 {
     List<Block> grid = new();
@@ -184,6 +185,7 @@ static List<Block> start()
     }
     return grid;
 }
+//sätter värden och startat spelet
 void InitGame()
 {
 
@@ -213,5 +215,3 @@ public class Block
     public Color color;
     public bool active;
 }
-
-// Nico was here
